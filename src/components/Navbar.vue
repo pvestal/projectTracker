@@ -5,9 +5,10 @@
             <v-btn flat color="white" @click="snackbar=false">Close</v-btn>
         </v-snackbar>
         <v-toolbar flat app>
-            <v-toolbar-side-icon class="grey--text" @click="drawer=!drawer"></v-toolbar-side-icon>
+            <v-toolbar-side-icon class="grey--text" @click="leftDrawer=!leftDrawer"></v-toolbar-side-icon>
             <v-toolbar-title class="text-uppercase grey--text">
                 <span class="font-weight-light">Team Workspace</span>
+                <span v-if="user != undefined"> Hello {{user.displayName}}</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
     
@@ -23,20 +24,27 @@
                     </v-list-tile>
                 </v-list>
             </v-menu>
-            <v-btn flat color="grey">
-                <span>Sign Out</span>
-                <v-icon right>exit_to_app</v-icon>
+            <!--Login and Signout Buttons-->
+
+            <!--<v-btn flat color="grey" v-if="user" @click="googleSignOut">-->
+            <!--    <span>Sign Out</span>-->
+            <!--    <v-icon right>exit_to_app</v-icon>-->
+            <!--</v-btn>-->
+            <v-btn v-if="!user" color="grey" flat to='/login' exact >
+                <span>Login</span>
+                <v-icon right>face</v-icon>
             </v-btn>
+            <v-toolbar-side-icon class="grey--text" @click="rightDrawer=!rightDrawer"></v-toolbar-side-icon>
         </v-toolbar>
-        <v-navigation-drawer app v-model="drawer" class="blue">
+        <v-navigation-drawer left app v-model="leftDrawer" class="blue">
             <v-layout column align-center>
                 <v-flex class="mt-5">
-                    <v-avatar :size="100" class="grey lighten-2" router :to="login">
+                    <v-avatar :size="100" class="grey lighten-2" >
                         <img v-if="!user" src="https://vuetifyjs.com/apple-touch-icon-180x180.png" alt="avatar" />
-                        <img v-else="user" :src="user.photoURL" />
+                        <img v-else="user" :src="user.photoURL" router :to="login"/>
                     </v-avatar>
-                    <p v-if="!user" align-center class="white--text subheading mt-1">User</p>
-                    <p v-else="user" align-center class="white--text subheading mt-1">{{user.displayName}}</p>
+                    <p v-if="!user" class="white--text subheading mt-1">User</p>
+                    <p v-else="user" class="white--text subheading mt-1">{{user.displayName}}</p>
                 </v-flex>
                 <v-flex class="mt-4 mb-3">
                     <addNewProject @projectAdded="snackbar = true" />
@@ -67,56 +75,73 @@
             </v-list>
             <!--Display List of Users Online-->
             <v-list>
-                <v-list-tile avatar v-for="user1 in onlineUsers[1]" :key="user1.key">
+                <v-list-tile avatar v-for="authUser in onlineUsers[1]" :key="authUser.key">
                     <v-list-tile-avatar>
                         <img v-if="!user" src="https://randomuser.me/api/portraits/lego/1.jpg" />
-                        <img v-else="user" :src="user1.user.photoURL" />
+                        <img v-else="user" :src="authUser.user.photoURL" />
                     </v-list-tile-avatar>
                     <v-list-tile-content>
                         <!--google auth returns user obj then user details-->
-                        <v-list-tile-title class="white--text">{{user1.user.displayName}}</v-list-tile-title>
+                        <v-list-tile-title class="white--text">{{authUser.user.displayName}}</v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
             </v-list>
+        </v-navigation-drawer>
+        <v-navigation-drawer right app v-model="rightDrawer" class="blue">
+          <v-list dense>
+            <v-list-tile @click="">
+              <v-list-tile-action>
+                <v-icon>home</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title>Home</v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
         </v-navigation-drawer>
     </nav>
 </template>
 
 <script>
 import addNewProject from './addNewProject'
-import firebase from 'firebase/app'
-import 'firebase/auth'
-import 'firebase/database' 
 
   export default {
     components: {addNewProject},
     data() {
         return {
             // user: null,
-            drawer: false,
+            leftDrawer: false,
+            rightDrawer: false,
             snackbar: false,
             links: [
-                
                 {icon: 'dashboard', text: 'Dashboard', route: '/'},
+                {icon: 'face', text: 'Login', route: '/login'},
                 {icon: 'folder', text: 'My Projects', route: '/projects'},
                 {icon: 'person', text: 'Team', route: '/team'},
-                {icon: 'chat', text: 'Chat', route: '/getName'},
+                {icon: 'chat', text: 'Chat', route: '/chat'},
+                {icon: 'meeting_room', text: 'Lobby', route: '/lobby'},
+                {icon: 'group', text: 'Users', route: '/users'},
             ],
             
         }
     },
-    created() {
-            if(!this.user) {
-            this.user = {}
+    watch: {
+      user (value) {
+        if (value !== null && value !== undefined) {
+        //   this.$router.push('/')
         }
+      }
     },
     computed: {
         user() {
           return this.$store.getters.user  
         },
         onlineUsers() {
-            console.log(this.$store.getters.onlineUsers)
             return this.$store.getters.onlineUsers
+        }
+    },
+    methods: {
+        googleSignOut() {
+            this.$store.dispatch('googleSignOut')
         }
     }
     // mounted() {

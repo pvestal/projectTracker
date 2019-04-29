@@ -1,48 +1,64 @@
 import firebase from 'firebase/app'
-import 'firebase/database'
+// import 'firebase/database'
+import 'firebase/firestore'
+import format from 'date-fns/format'
 
 const ChatModule = {
   state: {
     chats: []
   },
   mutations: {
-    SET_MESSAGES_EMPTY (state) {
-      state.messages = []
-    },
     SET_CHATS (state, payload) {
       state.chats = payload
+    },
+    ADD_CHAT (state, payload) {
+      state.chats.push(payload)
     }
   },
   actions: {
-    sendMessage ({commit}, payload) {
-      let chatID = payload.chatID
-      const message = {
-        user: payload.username,
-        content: payload.content,
-        date: payload.date
+    loadChats({commit}) {
+      commit('SET_LOADING', true)
+      firebase.firestore().collection('chats').get()
+      .then((querySnapshot) => {
+        let chatsArray = []
+        querySnapshot.forEach((doc) => {
+        let chat = doc.data()
+            chat.id = doc.id
+            chatsArray.push(chat)
+        })
+        commit('SET_CHATS', chatsArray)
+        commit('SET_LOADING', false)
+      })
+      .catch((error) => {
+        console.log(error)
+        commit('SET_LOADING', false)
+      })
+    },
+    createChat ({commit, getters}, payload) {
+      commit('SET_LOADING', true)
+      const user = getters.user
+      
+      const chatData = {
+        chatName: payload.chatName,
+        created: format(Date.now(), 'YYYY-MM-DD'),
+        creatorId: user.id,
+        creator: user.displayName
       }
-      firebase.database().ref('messages').child(chatID).child('messages').push(message)
-        .then(() => {
-          }
-        )
-        .catch((error) => {
-            console.log(error)
-          }
-        )
-    },
-    loadChats ({commit}) {
-      firebase.database().ref('chats').on('value', function (snapshot) {
-        commit('SET_CHATS', snapshot.val())
+
+      firebase.firestore().collection('chats').add(chatData)
+      .then(result => {
+        console.log("chat: ", result)
+        commit('ADD_CHAT', {
+          ...result,
+          id: result.id
+        })
+        commit('SET_LOADING', false)
       })
-    },
-    createChat ({commit}, payload) {
-      let newPostKey = firebase.database().ref().child('chats').push().key
-      let updates = {}
-      updates['/chats/' + newPostKey] = {name: payload.chatName}
-      firebase.database().ref().update(updates)
-      return new Promise((resolve, reject) => {
-        resolve(newPostKey)
+      .catch(error => {
+        console.log(error)
+        commit('SET_LOADING', false)
       })
+
     }
   },
   getters: {

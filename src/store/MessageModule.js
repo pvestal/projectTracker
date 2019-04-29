@@ -1,6 +1,7 @@
 import firebase from 'firebase/app'
+import 'firebase/database'
 
-const ChatModule = {
+const MessageModule = {
   state: {
     messages: []
   },
@@ -70,4 +71,4 @@ const ChatModule = {
   }
 }
 
-export default ChatModule
+export default MessageModule

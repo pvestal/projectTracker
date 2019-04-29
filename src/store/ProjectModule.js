@@ -5,9 +5,6 @@ const ProjectsModule = {
       projects: []
   },
   mutations: {
-    SET_LOADING(state, payload) {
-      state.loading = payload
-    },
     SET_PROJECTS(state, payload) {
       state.projects = payload
     },

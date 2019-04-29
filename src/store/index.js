@@ -17,7 +17,7 @@ export const store = new Vuex.Store({
   modules: {
     auth: AuthModule,
     chat: ChatModule,
-    projects: ProjectModule,
+    project: ProjectModule,
     message: MessageModule
   },
   state: {
@@ -26,7 +26,7 @@ export const store = new Vuex.Store({
     onlineUsers: []
   },
   mutations: {
-    setLoading (state, payload) {
+    SET_LOADING (state, payload) {
       state.loading = payload
     },
     setError (state, payload) {

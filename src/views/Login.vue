@@ -72,7 +72,10 @@
         <div>
           <p>Email: {{authUser.email}}</p>
           <p>Name: {{authUser.displayName}}</p>
-          <img :src="user.photoURL" /><br>
+          <img v-if="user!=undefined" :src="user.photoURL" />
+          <img v-else src="https://randomuser.me/api/portraits/lego/1.jpg" />
+          
+          <br>
           <v-btn @click="googleSignOut">SIGNOUT</v-btn>
         </div>
       </v-flex>
@@ -81,8 +84,8 @@
 </template>
 
 <script>
-import firebase from 'firebase/app'
-import 'firebase/auth'
+// import firebase from 'firebase/app'
+// import 'firebase/auth'
 
   export default {
     data() {
@@ -108,15 +111,16 @@ import 'firebase/auth'
         passwordResetSuccess: false,
       }
     },
-    created() {
-      firebase.auth().onAuthStateChanged(result => {
-        this.authUser = result
-        if(result) {
-          this.displayName = result.displayName
-          this.photoUrl = result.photoURL
-        }
-      })
-    },
+    // created() {
+      
+    //   firebase.auth().onAuthStateChanged(result => {
+    //     this.authUser = result
+    //     if(result) {
+    //       this.displayName = result.displayName
+    //       this.photoUrl = result.photoURL
+    //     }
+    //   })
+    // },
     computed: {
       user() {
         return this.$store.getters.user
@@ -126,12 +130,11 @@ import 'firebase/auth'
       }
     },
     watch: {
-      // user(value) {
-      //   if(value !== null && value !== undefined) {
-      //     //this.$router.push('/')
-      //     this.authUser = value
-      //   }
-      // }
+      user (value) {
+        if (value !== null && value !== undefined) {
+          this.$router.push('/lobby')
+        }
+      }
     },
     methods: {
       toggleForm() {
@@ -150,11 +153,12 @@ import 'firebase/auth'
       },
       onRegister() {
         console.log('attempting to createUserWithEmailAndPassword')
-        this.$store.dispatch('registerUser', {email: this.registerForm.email, password: this.registerForm.password, name: this.registerForm.name})
+        this.$store.dispatch('signUserUp', {email: this.registerForm.email, password: this.registerForm.password, name: this.registerForm.name})
         
       },
       onSignIn() {
-        this.$store.dispatch('signUserIn', {email: this.email, password: this.password})
+        console.log('attempting to sign user in with creditials')
+        this.$store.dispatch('signUserIn', {email: this.loginForm.email, password: this.loginForm.password})
       },
       googleSignIn() {
         this.$store.dispatch('googleSignIn')

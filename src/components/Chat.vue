@@ -44,7 +44,7 @@
 
 <template>
     <div class="chat">
-      <h3>Welcome {{name}} to the Chat</h3>
+      <h3>Welcome {{user.displayName}} to the Chat</h3>
         <newMsgDialog :name="name"></newMsgDialog>
         <ul class="messages">
             <li v-for="message in messages" :key="message.id">
@@ -54,23 +54,19 @@
             </li>
         </ul>
         <v-card>
-            <newMessage :name="name" />
+            <newMessage :user="user" />
         </v-card>
 
     </div>
 </template>
 
 <script>
-// import newMessage from '@/components/newMessage'
-// import newMsgDialog from '@/components/newMsgDialog'
-import format from 'date-fns/format'
 import newMsgDialog from './newMsgDialog'
 
     export default {
-        props: ['name'],
+        props: ['user'],
         components: {
             newMsgDialog
-            // newMsgDialog
         },
         name: 'Chat',
         data: () => ({
@@ -79,6 +75,9 @@ import newMsgDialog from './newMsgDialog'
         computed: {
             messages() {
                 return this.$store.getters.messages
+            },
+            user() {
+                return this.$store.getters.user
             }
         }
     }

@@ -1,0 +1,93 @@
+<!--<template>-->
+<!--  <v-list subheader>-->
+<!--    <v-subheader>Welcome {{user.displayName}} to the Lobby</v-subheader>-->
+<!--    <createRoom :room="room"></createRoom>-->
+    <!--<v-list-tile avatar v-for="(room, index) in rooms" v-bind:key="room.name" @click="" :to="/rooms/ + index">-->
+<!--    <v-list-tile avatar v-for="room in rooms" :key="room.id">-->
+<!--      <v-list-tile-content>-->
+        <!--<v-list-tile-title>{{room.roomName}}</v-list-tile-title>-->
+<!--        {{room.roomName}} : {{room.id}}-->
+<!--      </v-list-tile-content>-->
+<!--      <v-list-tile-action>-->
+<!--        <v-icon>chat_bubble</v-icon>-->
+<!--      </v-list-tile-action>-->
+<!--    </v-list-tile>-->
+<!--  </v-list>-->
+<!--</template>-->
+
+<template>
+  <v-container>
+    <v-layout>
+      <v-flex xs12 class="text-xs-center">
+        <v-progress-circular v-if="loading" indeterminate class="primary--text" :width="7" :size="70"></v-progress-circular>
+      </v-flex>
+    </v-layout>
+        <createChat :chat="chat"></createChat>
+    <v-layout row wrap v-for="chat in chats" :key="chat.id" class="mb-2">
+      <v-flex xs12 sm10 md8 offset-sm1 offset-md2>
+        <v-card class="info">
+          <v-container fluid>
+            <v-layout row>
+              <v-flex xs5 sm4 md3>
+                <v-img :src="chat.imageUrl" height="125px"></v-img>
+              </v-flex>
+              <v-flex xs7 sm8 md9>
+                <v-card-title>
+                  <div class="white--text">
+                  <h3 class="mb-0">{{chat.chatName}}</h3>
+                  <div>Id: {{chat.id}}</div>
+                  <div>Created: {{chat.created}}</div>
+                  <div>Created By: {{chat.creator}}</div>
+                  
+                  </div>
+                </v-card-title>
+                <v-card-actions>
+                  <v-btn flat :to="'/chats/' + chat.id">
+                    <v-icon left dark>arrow_forward<v-icon>
+                  View Room
+                  </v-btn>
+                </v-card-actions>
+              </v-flex>
+            </V-layout>
+          </v-container>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
+</template>
+
+<script>
+import createChat from '@/components/Chat/createChat'
+
+  export default {
+    name: 'Lobby',
+    components: {
+       createChat 
+    },
+    created() {
+      this.$store.dispatch('loadChats')
+    },
+    computed: {
+      user() {
+        return this.$store.getters.user
+      },
+      chats() {
+        return this.$store.getters.chats
+      },
+      loading() {
+        return this.$store.getters.loading
+      }
+    }
+  }
+</script>
+
+<style scoped>
+.title {
+  position: absolute;
+  bottom: 50px;
+  background-color: rgba(0,0,0,.5);
+  color: white;
+  font-size: 2em;
+  padding: 20px;
+}
+</style>

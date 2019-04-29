@@ -31,16 +31,16 @@ new Vue({
     })
     
     //check if auth
-    // firebase.auth().onAuthStateChanged((user) => {
-    //   if(user) {
-    //     this.$store.dispatch('autoSignIn', user)
-    //   }
-    // })
+    firebase.auth().onAuthStateChanged((user) => {
+      console.log("auth listener", user)
+      if(user) {
+        //load online users from firebase
+        this.$store.dispatch('loadOnlineUsers')
+      }
+    })
     
     //load projects from firebase
     this.$store.dispatch('loadProjects')
-    
-    //load online users from firebase
-    this.$store.dispatch('loadOnlineUsers')
+
   }
 }).$mount('#app')
