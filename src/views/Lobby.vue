@@ -1,20 +1,3 @@
-<!--<template>-->
-<!--  <v-list subheader>-->
-<!--    <v-subheader>Welcome {{user.displayName}} to the Lobby</v-subheader>-->
-<!--    <createRoom :room="room"></createRoom>-->
-    <!--<v-list-tile avatar v-for="(room, index) in rooms" v-bind:key="room.name" @click="" :to="/rooms/ + index">-->
-<!--    <v-list-tile avatar v-for="room in rooms" :key="room.id">-->
-<!--      <v-list-tile-content>-->
-        <!--<v-list-tile-title>{{room.roomName}}</v-list-tile-title>-->
-<!--        {{room.roomName}} : {{room.id}}-->
-<!--      </v-list-tile-content>-->
-<!--      <v-list-tile-action>-->
-<!--        <v-icon>chat_bubble</v-icon>-->
-<!--      </v-list-tile-action>-->
-<!--    </v-list-tile>-->
-<!--  </v-list>-->
-<!--</template>-->
-
 <template>
   <v-container>
     <!--<v-layout>-->
@@ -39,11 +22,11 @@
                   <div>Id: {{chat.chatID}}</div>
                   <div>Created: {{chat.created}}</div>
                   <div>Created By: {{chat.creator}}</div>
-                  
+                  <div>Messages Count: {{messages}}</div>
                   </div>
                 </v-card-title>
                 <v-card-actions>
-                  <v-btn flat :to="'/chats/' + chat.chatID">
+                  <v-btn flat :to="'/chat/' + chat.chatID">
                     <v-icon left dark>arrow_forward<v-icon>
                   View Room
                   </v-btn>
@@ -71,6 +54,9 @@ import createChat from '@/components/Chat/createChat'
       },
       chats() {
         return this.$store.getters.chats
+      },
+      messages() {
+        return this.$store.getters.getMessageCounts
       },
       loading() {
         return this.$store.getters.loading

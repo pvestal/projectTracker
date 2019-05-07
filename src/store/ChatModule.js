@@ -10,9 +10,6 @@ const ChatModule = {
       ]
   },
   mutations: {
-    SET_MESSAGES (state, payload) {
-      state.chats.messages = payload
-    },
     SET_CHATS (state, payload) {
       state.chats = payload
     },
@@ -22,24 +19,6 @@ const ChatModule = {
     }
   },
   actions: {
-    sendMessage ({commit}, payload) {
-      let chatID = payload.chatID
-      const message = {
-        user: payload.username,
-        content: payload.content,
-        date: payload.date
-      }
-      firebase.database().ref('messages').child(chatID).child('messages').push(message)
-        .then(
-          (data) => {
-          }
-        )
-        .catch(
-          (error) => {
-            console.log(error)
-          }
-        )
-    },
     loadChats ({commit}) {
       firebase.database().ref('chats').once('value')
       .then(snapshot => {
@@ -72,9 +51,6 @@ const ChatModule = {
     }
   },
   getters: {
-    messages (state) {
-      return state.messages
-    },
     chats (state) {
       return state.chats
     }

@@ -2,16 +2,16 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import AuthGuard from './auth-guard'
 import Dashboard from '@/views/Dashboard.vue'
-import CreateChat from '@/views/CreateChat.vue'
+// import CreateChat from '@/views/CreateChat.vue'
 import Team from '@/views/Team.vue'
 import Projects from '@/views/Projects.vue'
-import GetName from '@/views/getName.vue'
+// import GetName from '@/views/getName.vue'
 import Login from '@/views/Login.vue'
 import Profile from '@/views/Profile.vue'
 import Lobby from '@/views/Lobby.vue'
-import Chats from '@/views/Chats.vue'
+import Chat from '@/views/Chat.vue'
 import Users from '@/views/Users.vue'
-import Chat from '@/components/Chat'
+// import Chat from '@/components/Chat'
 
 
 Vue.use(Router)
@@ -25,11 +25,11 @@ export default new Router({
       name: 'dashboard',
       component: Dashboard
     },
-    {
-      path: '/createChat',
-      name: 'CreateChat',
-      component: CreateChat
-    },
+    // {
+    //   path: '/createChat',
+    //   name: 'CreateChat',
+    //   component: CreateChat
+    // },
     {
       path: '/team',
       name: 'team',
@@ -57,35 +57,35 @@ export default new Router({
       component: Lobby
     },
     {
-      path: '/chats/:id',
-      name: 'chats',
-      component: Chats,
+      path: '/chat/:chatID',
+      name: 'chat',
+      component: Chat,
       props: true,
       beforeEnter: AuthGuard
     },
-    {
-      path: '/getName',
-      name: 'getName',
-      component: GetName
-    },
+    // {
+    //   path: '/getName',
+    //   name: 'getName',
+    //   component: GetName
+    // },
     {
       path: '/login',
       name: 'login',
       component: Login
     },
-    {
-      path: '/chat',
-      name: 'chat',
-      component: Chat,
-      props: true,
-      // beforeEnter: AuthGuard
-      beforeEnter: (to, from, next) => {
-        if (to.params.name) {
-          next()
-        } else {
-          next({name: 'getName'})
-        }
-      }
-    }
+    // {
+    //   path: '/chat',
+    //   name: 'chat',
+    //   component: Chat,
+    //   props: true,
+    //   // beforeEnter: AuthGuard
+    //   beforeEnter: (to, from, next) => {
+    //     if (to.params.name) {
+    //       next()
+    //     } else {
+    //       next({name: 'getName'})
+    //     }
+    //   }
+    // }
   ]
 })
