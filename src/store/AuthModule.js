@@ -1,6 +1,8 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
+import 'firebase/storage'
+import format from 'date-fns/format'
 
 const AuthModule = {
   state: {
@@ -28,6 +30,29 @@ const AuthModule = {
           }
         )
     },
+    UPDATE_USER(state, payload) {
+      console.log("mutation payload: ", payload)
+
+      const user = state.user.find(function() {
+        return user.id === payload.id
+      })
+      if(payload.displayName) {
+        user.displayName = payload.displayName
+      }
+      if(payload.updated) {
+        user.updated = payload.updated
+      }
+      if(payload.image) {
+        user.photoURL = payload.image
+      }
+    },
+    REGISTER_FOR_GAME(state, payload) {
+      const id = payload.id
+        if (state.user.registeredGames.findIndex(game => game.id === id) >= 0) {
+            return
+        }
+      state.user.registeredGames.push(id)
+    },
     SET_REGISTERED_USERS (state, payload) {
       state.registeredUsers = payload
     }
@@ -45,7 +70,7 @@ const AuthModule = {
           photoURL: user.photoURL,
           created: user.metadata.creationTime,
           lastSignIn: user.metadata.lastSignInTime,
-          registered: true
+          games: []
         })
       })
       .then(() => {
@@ -98,10 +123,11 @@ const AuthModule = {
         const googleUser = {
           id: user.uid, 
           displayName: user.displayName, 
+          email: user.email,
           photoURL: user.photoURL,
           created: user.metadata.creationTime,
           lastSignIn: user.metadata.lastSignInTime,
-          registered: true
+          games: []
         }
         firebase.database().ref('users').child(user.uid).set(googleUser)
         commit('SET_USER', googleUser)
@@ -148,12 +174,78 @@ const AuthModule = {
         commit('SET_LOADING', false)
       })
     },
+    createGame({commit, getters}, payload) {
+      const user = getters.user
+      let gameID = payload.gameID
+        const game = {
+          creator: user.id,
+          gameId: gameID,
+          created: format(Date.now(), 'YYYY-MM-DD'),
+          joiner: null,
+        }
+      //   firebase.firestore().collection('registrations')
+      //   .add({gameId: payload, userId: user.id, timestamp: firebase.firestore.Timestamp.fromDate(new Date())})
+      firebase.database().ref('/users/').child(gameID).child('/games/').push(game)
+        .then(data => {
+          commit('SET_LOADING', false)
+          commit('REGISTER_FOR_GAME', {id:gameID})
+        })
+        .catch(error => {
+          console.log(error)
+          commit('SET_LOADING', false)
+        })
+    },
+    updateProfile({commit, getters}, payload) {
+      commit('SET_LOADING', true)
+      console.log("request received")
+      let imageURL
+      let user = getters.user
+      console.log("user", user.displayName)
+      const updateObj = {}
+      if (payload.displayName) {
+        updateObj.displayName = payload.displayName
+      }
+      if(payload.updated) {
+        updateObj.updated = payload.updated 
+      }
+      if(payload.image) {
+        updateObj.PhotoURL = payload.image 
+      }
+      firebase.database().ref('/users/').child(user.id).once('value')
+      .then((response) => {
+        console.log("firebase response: ", response)
+        const fileName = payload.image.name
+        const ext = fileName.slice(fileName.lastIndexOf('.'))
+        //put the raw image file into firebase storage
+        return firebase.storage().ref('/users/' + user.id + '.' + ext).put(payload.image)
+      })
+      .then(fileData => {
+        console.log("storage response", fileData)
+        //return promise to save to firebase
+        return fileData.ref.getDownloadURL()
+      })
+      .then(imageURL => {
+        console.log("imageURL response", imageURL)
+        return firebase.database().ref('/users/').child(user.id).update({imageURL: imageURL})
+      })
+      .then(() => {
+        console.log("sending update request to firebase for: ", user.displayName)
+        firebase.database().ref('/users/').child(user.id).update(updateObj)
+        console.log("setting vuex state")
+        commit('UPDATE_USER', {id: user.id, payload})
+        commit('SET_LOADING', false)
+      })
+      .catch(error => {
+        console.log(error)
+        commit('SET_LOADING', false)
+      })
+    }
   },
   getters: {
     user (state) {
       return state.user
     },
-    getRegistedUsers (state) {
+    getRegisteredUsers(state) {
       return state.registeredUsers
     }
   }

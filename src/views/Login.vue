@@ -67,19 +67,6 @@
         </v-card>
       </v-flex>
     </v-layout>
-    <v-layout v-if="authUser">
-      <v-flex xs12 sm6 offset-sm3>
-        <div>
-          <p>Email: {{authUser.email}}</p>
-          <p>Name: {{authUser.displayName}}</p>
-          <img v-if="user!=undefined" :src="user.photoURL" />
-          <img v-else src="https://randomuser.me/api/portraits/lego/1.jpg" />
-          
-          <br>
-          <v-btn @click="googleSignOut">SIGNOUT</v-btn>
-        </div>
-      </v-flex>
-    </v-layout>
   </v-container>
 </template>
 
@@ -111,16 +98,6 @@
         passwordResetSuccess: false,
       }
     },
-    // created() {
-      
-    //   firebase.auth().onAuthStateChanged(result => {
-    //     this.authUser = result
-    //     if(result) {
-    //       this.displayName = result.displayName
-    //       this.photoUrl = result.photoURL
-    //     }
-    //   })
-    // },
     computed: {
       user() {
         return this.$store.getters.user
@@ -132,7 +109,7 @@
     watch: {
       user (value) {
         if (value !== null && value !== undefined) {
-          this.$router.push('/lobby')
+          this.$router.push('/profile')
         }
       }
     },

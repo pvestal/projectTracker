@@ -27,10 +27,11 @@
             <div class="caption grey--text">User ID</div>
             <div>{{user.id}}</div>
           </v-flex>
-          <v-flex xs2 sm3 md2>
-            <div class="right"
-              <v-chip small class="white--text caption my-2" :class="onlineUsers.state">{{onlineUsers.state}}</v-chip>
-            </div>
+          <v-flex xs6 sm3 md2>
+            
+            <div class="caption grey--text">Status</div>
+            <v-chip small>{{onlineUsers[1]}}</v-chip>
+          
           </v-flex>
         </v-layout>
       </v-card>
@@ -57,12 +58,12 @@
             this.$store.dispatch('getRegUsers')
         },
         computed: {
-            users() {
-                return this.$store.getters.getRegistedUsers
-            },
-            onlineUsers() {
+          users() {
+            return this.$store.getters.getRegisteredUsers
+          },
+          onlineUsers() {
             return this.$store.getters.onlineUsers
-            }
+          }
         }
     }
 </script>

@@ -21,14 +21,13 @@
         return this.$store.getters.user  
       }
     },
-    created: {
-      if (user) {
-        
-        this.$router.push({ name: 'chat', params: { name: this.user.displayName } })
-        this.$refs.form.reset()
-        this.$store.dispatch('loadMessages')
-      }
-    },
+    // watch: {
+    //   user (value) {
+    //     if (value !== null && value !== undefined) {
+    //       console.log("user change detected: ", value)
+    //     }
+    //   }
+    // },
     methods: {
       enterChat() {
           if(this.name) {

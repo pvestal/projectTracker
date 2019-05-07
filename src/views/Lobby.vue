@@ -17,13 +17,14 @@
 
 <template>
   <v-container>
-    <v-layout>
-      <v-flex xs12 class="text-xs-center">
-        <v-progress-circular v-if="loading" indeterminate class="primary--text" :width="7" :size="70"></v-progress-circular>
-      </v-flex>
-    </v-layout>
+    <!--<v-layout>-->
+    <!--  <v-flex xs12 class="text-xs-center">-->
+    <!--    <v-progress-circular v-if="loading" indeterminate class="primary--text" :width="7" :size="70"></v-progress-circular>-->
+    <!--  </v-flex>-->
+    <!--</v-layout>-->
         <createChat :chat="chat"></createChat>
-    <v-layout row wrap v-for="chat in chats" :key="chat.id" class="mb-2">
+        <!--<a href="/createChat">Create Chat</a>-->
+    <v-layout row wrap v-for="chat in chats" :key="chat.chatName" class="mb-2">
       <v-flex xs12 sm10 md8 offset-sm1 offset-md2>
         <v-card class="info">
           <v-container fluid>
@@ -35,14 +36,14 @@
                 <v-card-title>
                   <div class="white--text">
                   <h3 class="mb-0">{{chat.chatName}}</h3>
-                  <div>Id: {{chat.id}}</div>
+                  <div>Id: {{chat.chatID}}</div>
                   <div>Created: {{chat.created}}</div>
                   <div>Created By: {{chat.creator}}</div>
                   
                   </div>
                 </v-card-title>
                 <v-card-actions>
-                  <v-btn flat :to="'/chats/' + chat.id">
+                  <v-btn flat :to="'/chats/' + chat.chatID">
                     <v-icon left dark>arrow_forward<v-icon>
                   View Room
                   </v-btn>
@@ -63,9 +64,6 @@ import createChat from '@/components/Chat/createChat'
     name: 'Lobby',
     components: {
        createChat 
-    },
-    created() {
-      this.$store.dispatch('loadChats')
     },
     computed: {
       user() {

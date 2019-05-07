@@ -46,6 +46,7 @@ export const store = new Vuex.Store({
         result[0] = snapshot.numChildren()
         result[1] = snapshot.val()
         commit('SET_ONLINE_USERS', result)
+        console.log("onlineUsers: ", result[1])
       })
     },
     clearError ({commit}) {

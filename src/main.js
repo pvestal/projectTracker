@@ -41,6 +41,7 @@ new Vue({
     
     //load projects from firebase
     this.$store.dispatch('loadProjects')
-
+    //load chats from firebase
+    this.$store.dispatch('loadChats')
   }
 }).$mount('#app')

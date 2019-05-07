@@ -47,7 +47,7 @@
                     <p v-else="user" class="white--text subheading mt-1">{{user.displayName}}</p>
                 </v-flex>
                 <v-flex class="mt-4 mb-3">
-                    <addNewProject @projectAdded="snackbar = true" />
+                    <addNewProject v-if="user" @projectAdded="snackbar = true" />
                 </v-flex>
             </v-layout>
             <v-list>
@@ -88,13 +88,13 @@
             </v-list>
         </v-navigation-drawer>
         <v-navigation-drawer right app v-model="rightDrawer" class="blue">
-          <v-list dense>
+          <v-list dark>
             <v-list-tile @click="">
               <v-list-tile-action>
-                <v-icon>home</v-icon>
+                <v-icon>chat</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
-                <v-list-tile-title>Home</v-list-tile-title>
+                <v-list-tile-title class="white--text">Chats</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
         </v-navigation-drawer>
@@ -117,7 +117,7 @@ import addNewProject from './addNewProject'
                 {icon: 'face', text: 'Login', route: '/login'},
                 {icon: 'folder', text: 'My Projects', route: '/projects'},
                 {icon: 'person', text: 'Team', route: '/team'},
-                {icon: 'chat', text: 'Chat', route: '/chat'},
+                // {icon: 'chat', text: 'Chat', route: '/chat'},
                 {icon: 'meeting_room', text: 'Lobby', route: '/lobby'},
                 {icon: 'group', text: 'Users', route: '/users'},
             ],
@@ -127,7 +127,7 @@ import addNewProject from './addNewProject'
     watch: {
       user (value) {
         if (value !== null && value !== undefined) {
-        //   this.$router.push('/')
+          console.log("user change detected: ", value)
         }
       }
     },
@@ -144,8 +144,5 @@ import addNewProject from './addNewProject'
             this.$store.dispatch('googleSignOut')
         }
     }
-    // mounted() {
-    //     this.$store.dispatch('loadOnlineUsers')
-    // }
   }
 </script>

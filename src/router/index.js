@@ -2,12 +2,14 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import AuthGuard from './auth-guard'
 import Dashboard from '@/views/Dashboard.vue'
+import CreateChat from '@/views/CreateChat.vue'
 import Team from '@/views/Team.vue'
 import Projects from '@/views/Projects.vue'
 import GetName from '@/views/getName.vue'
 import Login from '@/views/Login.vue'
+import Profile from '@/views/Profile.vue'
 import Lobby from '@/views/Lobby.vue'
-import Rooms from '@/views/Rooms.vue'
+import Chats from '@/views/Chats.vue'
 import Users from '@/views/Users.vue'
 import Chat from '@/components/Chat'
 
@@ -24,6 +26,11 @@ export default new Router({
       component: Dashboard
     },
     {
+      path: '/createChat',
+      name: 'CreateChat',
+      component: CreateChat
+    },
+    {
       path: '/team',
       name: 'team',
       component: Team
@@ -32,6 +39,12 @@ export default new Router({
       path: '/users',
       name: 'users',
       component: Users
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: Profile,
+      beforeEnter: AuthGuard
     },
     {
       path: '/projects',
@@ -44,9 +57,9 @@ export default new Router({
       component: Lobby
     },
     {
-      path: '/rooms/:id',
-      name: 'rooms',
-      component: Rooms,
+      path: '/chats/:id',
+      name: 'chats',
+      component: Chats,
       props: true,
       beforeEnter: AuthGuard
     },
