@@ -32,7 +32,7 @@ import format from 'date-fns/format'
     ],
     created() {
       // value = snapshot.val() | key = snapshot.key
-      firebase.database().ref('/chats/').child('/messages/').child(this.chatID).on('child_added', snapshot => {
+      firebase.database().ref('/chats/').child(this.chatID).child('/messages/').on('child_added', snapshot => {
         this.messages.push({
           ...snapshot.val(),
           id: snapshot.key
@@ -46,7 +46,7 @@ import format from 'date-fns/format'
     },
     methods: {
       storeMessage () {
-        firebase.database().ref('/chats/').child('/messages/').child(this.chatID)
+        firebase.database().ref('/chats/').child(this.chatID).child('/messages/')
         .push({
           user: this.user, 
           created: format(Date.now(), 'DD/MM/YY HH:mm:ss'), 

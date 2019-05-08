@@ -7,15 +7,14 @@
             <v-flex xs12 sm6 offset-sm3>
             <p>Name: {{user.displayName}}</p>
             <p>Email: {{user.email}}</p>
-            <p>UserId: {{user.id}}</p>
-            <p>Status: {{user.status}}</p>
+            <p>UserId: {{user.uid}}</p>
             <p>Account Created: {{user.created}}</p>
             <p>Last Login: {{user.lastSignIn}}</p>
             <img v-if="user.photoURL!=undefined" :src="user.photoURL" />
             <img v-else src="https://randomuser.me/api/portraits/lego/1.jpg" />
             <v-btn raised @click="onPickFile">Change Image</v-btn>
             <input type="file" v-show="false" ref="fileInput" accept="image/*" @change="onFilePicked">
-            <img :src="imageUrl" height="150">
+            <img :src="imageUrl" height="100">
             <p>games: {{user.games}}</p>
           <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
@@ -42,7 +41,7 @@ import format from 'date-fns/format'
           displayName: '',
           imageUrl: '',
           image: null,
-          updated: format(Date.now(), 'YYYY-MM-DD'),
+          updated: format(Date.now(), 'DD/MM/YY HH:mm:ss'),
         }
     },
     computed: {

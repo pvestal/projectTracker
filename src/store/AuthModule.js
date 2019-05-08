@@ -33,8 +33,8 @@ const AuthModule = {
     UPDATE_USER(state, payload) {
       console.log("mutation payload: ", payload)
 
-      const user = state.user.find(function() {
-        return user.id === payload.id
+      const user = state.user.find(user => {
+        return user.uid === payload.id
       })
       if(payload.displayName) {
         user.displayName = payload.displayName
@@ -76,7 +76,7 @@ const AuthModule = {
       .then(() => {
         commit('SET_LOADING', false)
         const newUser = {
-          id: user.uid,
+          uid: user.uid,
           displayName: payload.name,
         }
         //Vuex user state
@@ -96,7 +96,7 @@ const AuthModule = {
           user = userData.user
             firebase.database().ref('users').child(user.uid).once('value', snap => {
               const thaUser = {
-                id: user.uid, 
+                uid: user.uid, 
                 displayName: snap.val().displayName, 
               }
               //Vuex user state
@@ -121,7 +121,7 @@ const AuthModule = {
       .then(googleData => {
         user = googleData.user
         const googleUser = {
-          id: user.uid, 
+          uid: user.uid, 
           displayName: user.displayName, 
           email: user.email,
           photoURL: user.photoURL,
@@ -162,7 +162,7 @@ const AuthModule = {
         let uArray = []
         querySnapshot.forEach((doc) => {
         let user = doc.val()
-            user.id = doc.val().id
+            user.uid = doc.val().uid
             uArray.push(user)
             console.log(user.id)
         })
@@ -178,7 +178,7 @@ const AuthModule = {
       const user = getters.user
       let gameID = payload.gameID
         const game = {
-          creator: user.id,
+          creator: user.uid,
           gameId: gameID,
           created: format(Date.now(), 'YYYY-MM-DD'),
           joiner: null,
@@ -209,15 +209,15 @@ const AuthModule = {
         updateObj.updated = payload.updated 
       }
       if(payload.image) {
-        updateObj.PhotoURL = payload.image 
+        updateObj.photoURL = payload.image 
       }
-      firebase.database().ref('/users/').child(user.id).once('value')
+      firebase.database().ref('/users/').child(user.uid).once('value')
       .then((response) => {
         console.log("firebase response: ", response)
         const fileName = payload.image.name
         const ext = fileName.slice(fileName.lastIndexOf('.'))
         //put the raw image file into firebase storage
-        return firebase.storage().ref('/users/' + user.id + '.' + ext).put(payload.image)
+        return firebase.storage().ref('/users/' + user.uid + '.' + ext).put(payload.image)
       })
       .then(fileData => {
         console.log("storage response", fileData)
@@ -226,13 +226,13 @@ const AuthModule = {
       })
       .then(imageURL => {
         console.log("imageURL response", imageURL)
-        return firebase.database().ref('/users/').child(user.id).update({imageURL: imageURL})
+        return firebase.database().ref('/users/').child(user.uid).update({photoURL: imageURL})
       })
       .then(() => {
         console.log("sending update request to firebase for: ", user.displayName)
-        firebase.database().ref('/users/').child(user.id).update(updateObj)
+        firebase.database().ref('/users/').child(user.uid).update(updateObj)
         console.log("setting vuex state")
-        commit('UPDATE_USER', {id: user.id, payload})
+        commit('UPDATE_USER', {uid: user.uid, payload})
         commit('SET_LOADING', false)
       })
       .catch(error => {
