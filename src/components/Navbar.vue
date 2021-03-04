@@ -41,10 +41,10 @@
                 <v-flex class="mt-5">
                     <v-avatar :size="100" class="grey lighten-2" >
                         <img v-if="!user" src="https://vuetifyjs.com/apple-touch-icon-180x180.png" alt="avatar" />
-                        <img v-else="user" :src="user.photoURL" router :to="login"/>
+                        <img v-else :src="user.photoURL" router :to="login"/>
                     </v-avatar>
                     <p v-if="!user" class="white--text subheading mt-1">User</p>
-                    <p v-else="user" class="white--text subheading mt-1">{{user.displayName}}</p>
+                    <p v-else class="white--text subheading mt-1">{{user.displayName}}</p>
                 </v-flex>
                 <v-flex class="mt-4 mb-3">
                     <addNewProject v-if="user" @projectAdded="snackbar = true" />
@@ -78,7 +78,7 @@
                 <v-list-tile avatar v-for="authUser in onlineUsers[1]" :key="authUser.key">
                     <v-list-tile-avatar>
                         <img v-if="!user" src="https://randomuser.me/api/portraits/lego/1.jpg" />
-                        <img v-else="user" :src="authUser.user.photoURL" />
+                        <img v-else :src="authUser.user.photoURL" />
                     </v-list-tile-avatar>
                     <v-list-tile-content>
                         <!--google auth returns user obj then user details-->
@@ -89,7 +89,7 @@
         </v-navigation-drawer>
         <v-navigation-drawer right app v-model="rightDrawer" class="blue">
           <v-list dark>
-            <v-list-tile @click="">
+            <v-list-tile>
               <v-list-tile-action>
                 <v-icon>chat</v-icon>
               </v-list-tile-action>
@@ -97,6 +97,7 @@
                 <v-list-tile-title class="white--text">Chats</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
+          </v-list>
         </v-navigation-drawer>
     </nav>
 </template>

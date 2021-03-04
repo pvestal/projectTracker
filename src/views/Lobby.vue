@@ -27,7 +27,7 @@
                 </v-card-title>
                 <v-card-actions>
                   <v-btn flat :to="'/chat/' + chat.chatID">
-                    <v-icon left dark>arrow_forward<v-icon>
+                    <v-icon left dark>arrow_forward</v-icon>
                   View Room
                   </v-btn>
                 </v-card-actions>
@@ -36,6 +36,8 @@
           </v-container>
         </v-card>
       </v-flex>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 

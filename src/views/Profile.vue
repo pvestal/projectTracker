@@ -16,6 +16,8 @@
             <input type="file" v-show="false" ref="fileInput" accept="image/*" @change="onFilePicked">
             <img :src="imageUrl" height="100">
             <p>games: {{user.games}}</p>
+            </v-flex>
+          </v-layout>
           <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
               <v-btn type="submit">Update Profile</v-btn>
